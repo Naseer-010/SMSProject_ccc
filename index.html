@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRM University - Student Management System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-header">
+                <img src="./logo.png" alt="SRM University" class="university-logo">
+                <h1>Student Management System</h1>
+                <p class="subtitle">SRM Institute of Science and Technology</p>
+            </div>
+            <div class="login-card">
+                <h2>Login to Your Account</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" required placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+                <div class="demo-credentials">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p>Admin: admin / admin123</p>
+                    <p>Staff: staff / staff123</p>
+                    <p>User: user / user123</p>
+                    <p>Guest: guest / guest123</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div id="dashboardScreen" class="screen">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="nav-left">
+                    <img src="logo.png" alt="SRM" class="nav-logo">
+                    <span class="nav-title">Student Management System</span>
+                </div>
+                <div class="nav-right">
+                    <span class="user-info">
+                        <span class="user-icon">👤</span>
+                        <span id="currentUserName">User</span>
+                        <span class="role-badge" id="currentUserRole">ADMIN</span>
+                    </span>
+                    <button id="logoutBtn" class="btn-logout">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <ul class="menu">
+                    <li class="menu-item active" data-view="dashboard">
+                        <span class="menu-icon">📊</span>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="menu-item" data-view="students" data-role="all">
+                        <span class="menu-icon">👥</span>
+                        <span>View Students</span>
+                    </li>
+                    <li class="menu-item" data-view="add" data-role="ADMIN,STAFF">
+                        <span class="menu-icon">➕</span>
+                        <span>Add Student</span>
+                    </li>
+                    <li class="menu-item" data-view="search" data-role="ADMIN,STAFF,USER">
+                        <span class="menu-icon">🔍</span>
+                        <span>Search Student</span>
+                    </li>
+                    <li class="menu-item" data-view="update" data-role="ADMIN">
+                        <span class="menu-icon">✏️</span>
+                        <span>Update Student</span>
+                    </li>
+                    <li class="menu-item" data-view="delete" data-role="ADMIN">
+                        <span class="menu-icon">🗑️</span>
+                        <span>Delete Student</span>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content">
+                <!-- Dashboard View -->
+                <div id="dashboardView" class="view active">
+                    <h2 class="page-title">Dashboard</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">👥</div>
+                            <div class="stat-info">
+                                <h3 id="totalStudents">0</h3>
+                                <p>Total Students</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">⭐</div>
+                            <div class="stat-info">
+                                <h3 id="avgMarks">0.00</h3>
+                                <p>Average Marks</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">🏆</div>
+                            <div class="stat-info">
+                                <h3 id="topPerformer">-</h3>
+                                <p>Top Performer</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">📈</div>
+                            <div class="stat-info">
+                                <h3 id="passPercentage">0%</h3>
+                                <p>Pass Rate (≥40)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="recent-section">
+                        <h3>Recent Students</h3>
+                        <div id="recentStudents" class="table-container"></div>
+                    </div>
+                </div>
+
+                <!-- Students View -->
+                <div id="studentsView" class="view">
+                    <h2 class="page-title">All Students</h2>
+                    <div class="table-controls">
+                        <input type="text" id="filterInput" placeholder="Filter by name or roll..." class="filter-input">
+                        <select id="sortSelect" class="sort-select">
+                            <option value="roll">Sort by Roll</option>
+                            <option value="name">Sort by Name</option>
+                            <option value="marks">Sort by Marks</option>
+                        </select>
+                    </div>
+                    <div id="studentsTable" class="table-container"></div>
+                </div>
+
+                <!-- Add Student View -->
+                <div id="addView" class="view">
+                    <h2 class="page-title">Add New Student</h2>
+                    <div class="form-card">
+                        <form id="addStudentForm">
+                            <div class="form-group">
+                                <label for="addRoll">Roll Number *</label>
+                                <input type="number" id="addRoll" required placeholder="Enter roll number">
+                            </div>
+                            <div class="form-group">
+                                <label for="addName">Full Name *</label>
+                                <input type="text" id="addName" required placeholder="Enter student name">
+                            </div>
+                            <div class="form-group">
+                                <label for="addMarks">Marks *</label>
+                                <input type="number" id="addMarks" step="0.01" required placeholder="Enter marks">
+                            </div>
+                            <button type="submit" class="btn-primary">Add Student</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Search Student View -->
+                <div id="searchView" class="view">
+                    <h2 class="page-title">Search Student</h2>
+                    <div class="form-card">
+                        <form id="searchForm">
+                            <div class="form-group">
+                                <label for="searchRoll">Roll Number</label>
+                                <input type="number" id="searchRoll" required placeholder="Enter roll number to search">
+                            </div>
+                            <button type="submit" class="btn-primary">Search</button>
+                        </form>
+                    </div>
+                    <div id="searchResult" class="search-result"></div>
+                </div>
+
+                <!-- Update Student View -->
+                <div id="updateView" class="view">
+                    <h2 class="page-title">Update Student</h2>
+                    <div class="form-card">
+                        <form id="updateSearchForm">
+                            <div class="form-group">
+                                <label for="updateSearchRoll">Roll Number</label>
+                                <input type="number" id="updateSearchRoll" required placeholder="Enter roll number">
+                            </div>
+                            <button type="submit" class="btn-primary">Find Student</button>
+                        </form>
+                    </div>
+                    <div id="updateFormContainer" style="display: none;">
+                        <div class="form-card">
+                            <h3>Update Details</h3>
+                            <form id="updateStudentForm">
+                                <input type="hidden" id="updateRoll">
+                                <div class="form-group">
+                                    <label for="updateName">Full Name</label>
+                                    <input type="text" id="updateName" required placeholder="Enter new name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="updateMarks">Marks</label>
+                                    <input type="number" id="updateMarks" step="0.01" required placeholder="Enter new marks">
+                                </div>
+                                <button type="submit" class="btn-primary">Update Student</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Student View -->
+                <div id="deleteView" class="view">
+                    <h2 class="page-title">Delete Student</h2>
+                    <div class="form-card">
+                        <form id="deleteForm">
+                            <div class="form-group">
+                                <label for="deleteRoll">Roll Number</label>
+                                <input type="number" id="deleteRoll" required placeholder="Enter roll number to delete">
+                            </div>
+                            <button type="submit" class="btn-danger">Delete Student</button>
+                        </form>
+                    </div>
+                    <div id="deleteResult" class="search-result"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
